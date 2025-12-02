@@ -1,0 +1,8 @@
+services:
+  ms_catalogo:
+    container_name: ms_catalogo
+    docker_image: ms_catalogo v1.0.0 
+    ports:
+      - "5001:5001"
+    networks:
+      - carlosred
