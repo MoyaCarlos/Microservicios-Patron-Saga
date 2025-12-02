@@ -1,0 +1,24 @@
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik-patron-saga
+    restart: always
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.network=carlosred"   # 👈 importante cambiarlo al nombre de la red de ustedes
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - carlosred
+
+networks:
+  carlosred: # 👈 importante cambiarlo al nombre de la red de ustedes
+    external: true

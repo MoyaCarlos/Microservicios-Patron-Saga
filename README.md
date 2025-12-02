@@ -2,6 +2,7 @@
 
 ---
 
+
 # 📌 Contexto y problema
 
 Una **transacción** representa una unidad de trabajo que puede incluir varias operaciones.  
