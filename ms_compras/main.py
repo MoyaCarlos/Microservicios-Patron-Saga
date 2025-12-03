@@ -1,5 +1,5 @@
-from .app import create_app
-from .app import logger, SERVICE_NAME, HOST, PORT
+from app import create_app
+from app import logger, SERVICE_NAME, HOST, PORT
 
 app = create_app()
 

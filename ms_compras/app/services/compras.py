@@ -6,8 +6,10 @@ import threading
 
 # Agregar el directorio padre al path para importar common
 # Necesitamos ir 3 niveles arriba: services/ -> ms_compras/ -> microservices/
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from common.transaction_helper import simular_latencia, tiene_exito, generar_id
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+#from common.transaction_helper import simular_latencia, tiene_exito, generar_id
+
+from ..utils.transaction_helper import simular_latencia, tiene_exito, generar_id
 
 #configuraciones del microservicio
 from ..config import (
