@@ -1,5 +1,5 @@
 from flask import Flask
-# from resources.compras import compras_bp
+from .resources.compras import compras_bp
 from .config.config import (
     SERVICE_NAME, LOG_LEVEL, HOST, PORT
 )
@@ -25,7 +25,7 @@ def create_app() -> Flask:
 
     app = Flask(__name__)
 
-    # app.register_blueprint(compras_bp)
+    app.register_blueprint(compras_bp)
 
     logger.info(f"Aplicación {SERVICE_NAME} configurada correctamente")
 
