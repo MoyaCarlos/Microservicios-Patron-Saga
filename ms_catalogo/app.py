@@ -1,8 +1,8 @@
 from flask import Flask
 import logging
 
-from routes import catalogo_bp
-from config import PORT, HOST, SERVICE_NAME, LOG_LEVEL
+from .routes import catalogo_bp
+from .config import PORT, HOST, SERVICE_NAME, LOG_LEVEL
 
 # Configurar logging
 logging.basicConfig(

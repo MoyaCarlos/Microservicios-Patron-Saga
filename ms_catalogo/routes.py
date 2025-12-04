@@ -3,8 +3,8 @@ Definición de rutas/endpoints para el microservicio de catálogo
 """
 from flask import Blueprint, jsonify
 from typing import Tuple
-from services.catalogo_service import CatalogoService
-from config import SERVICE_NAME
+from .services.catalogo_service import CatalogoService
+from .config import SERVICE_NAME
 
 # Crear blueprint para las rutas
 catalogo_bp = Blueprint('catalogo', __name__)

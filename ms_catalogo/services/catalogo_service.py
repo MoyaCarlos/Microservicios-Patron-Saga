@@ -5,7 +5,7 @@ import logging
 import random
 from typing import Dict, List, Tuple
 
-from config import PRODUCTOS
+from ..config import PRODUCTOS
 
 logger = logging.getLogger(__name__)
 
