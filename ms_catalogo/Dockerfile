@@ -13,5 +13,5 @@ RUN pip install --no-cache-dir -r ms_catalogo/requirements.txt
 
 EXPOSE 5001
 
-# Usar Granian como servidor WSGI con 1 worker
+# Usar Granian como servidor WSGI con 1 worker (memoria compartida)
 CMD ["granian", "--interface", "wsgi", "--host", "0.0.0.0", "--port", "5001", "--workers", "1", "ms_catalogo.app:app"]
