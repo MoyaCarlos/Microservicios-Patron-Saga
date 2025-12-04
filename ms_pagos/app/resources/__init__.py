@@ -1,0 +1,1 @@
+from .pagos import pagos_bp
