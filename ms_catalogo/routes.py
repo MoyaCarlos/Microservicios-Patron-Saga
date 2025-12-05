@@ -57,3 +57,19 @@ def obtener_producto_por_id(producto_id: str) -> Tuple[dict, int]:
     """
     response, status_code = catalogo_service.buscar_producto_por_id(producto_id)
     return jsonify(response), status_code
+
+
+@catalogo_bp.route("/buscar/<nombre>", methods=["GET"])
+def buscar_producto_por_nombre(nombre: str) -> Tuple[dict, int]:
+    """
+    Endpoint para buscar un producto por nombre.
+    
+    Args:
+        nombre: Nombre del producto
+    
+    Returns:
+        200: Producto encontrado
+        404: Producto no encontrado
+    """
+    response, status_code = catalogo_service.buscar_producto_por_nombre(nombre)
+    return jsonify(response), status_code

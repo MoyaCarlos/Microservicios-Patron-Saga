@@ -52,3 +52,23 @@ class CatalogoService:
         
         logger.warning(f'❌ Producto {producto_id} no encontrado')
         return {"error": "Producto no encontrado"}, 404
+    
+    def buscar_producto_por_nombre(self, nombre: str) -> Tuple[Dict, int]:
+        """
+        Busca un producto específico por su nombre (búsqueda case-insensitive).
+        
+        Args:
+            nombre: Nombre del producto a buscar
+            
+        Returns:
+            Tupla con (respuesta_dict, codigo_http)
+        """
+        nombre_lower = nombre.lower().strip()
+        
+        for producto in self.productos:
+            if producto["nombre"].lower().strip() == nombre_lower:
+                logger.info(f'🔍 Producto encontrado por nombre: {producto["nombre"]}')
+                return producto, 200
+        
+        logger.warning(f'❌ Producto "{nombre}" no encontrado en catálogo')
+        return {"error": f"Producto '{nombre}' no encontrado en catálogo"}, 404

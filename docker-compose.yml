@@ -1,11 +1,30 @@
 services:
 # RECUERDEN CAMBIARLA A LA RED QUE ESTEN USANDO
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik-patron-saga
+    restart: always
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.network=carlosred"   # 👈 importante cambiarlo al nombre de la red de ustedes
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - carlosred
   # Microservicio Catálogo
   ms-catalogo:
     build:
       context: .
       dockerfile: ms_catalogo/Dockerfile
-    image: ms-catalogo:1.1.0  
+    image: ms-catalogo:v1.0.0  # 1 worker - testing
     container_name: ms-catalogo
     environment:
       - PYTHONPATH=/app
@@ -19,7 +38,95 @@ services:
       - "traefik.http.services.ms-catalogo.loadbalancer.server.port=5001"
       - "traefik.http.middlewares.ms-catalogo-strip.stripprefix.prefixes=/ms_catalogo"
       - "traefik.http.routers.ms-catalogo.middlewares=ms-catalogo-strip"
+    
+  # Microservicio Compras
+  ms-compras:
+    build:
+      context: .
+      dockerfile: ms_compras/Dockerfile
+    image: ms-compras:v1.0.0  # 1 worker - testing
+    container_name: ms-compras
+    environment:
+      - PYTHONPATH=/app
+      - PORT=5002
+    networks:
+      - carlosred
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ms-compras.rule=PathPrefix(`/ms_compras`)"
+      - "traefik.http.routers.ms-compras.entrypoints=web"
+      - "traefik.http.services.ms-compras.loadbalancer.server.port=5002"
+      - "traefik.http.middlewares.ms-compras-strip.stripprefix.prefixes=/ms_compras"
+      - "traefik.http.routers.ms-compras.middlewares=ms-compras-strip"
 
+  # Microservicio Pagos
+  ms-pagos:
+    build:
+      context: .
+      dockerfile: ms_pagos/Dockerfile
+    image: ms-pagos:v1.0.0  # 1 worker - testing
+    container_name: ms-pagos
+    environment:
+      - PYTHONPATH=/app
+      - PORT=5003
+    networks:
+      - carlosred
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ms-pagos.rule=PathPrefix(`/ms_pagos`)"
+      - "traefik.http.routers.ms-pagos.entrypoints=web"
+      - "traefik.http.services.ms-pagos.loadbalancer.server.port=5003"
+      - "traefik.http.middlewares.ms-pagos-strip.stripprefix.prefixes=/ms_pagos"
+      - "traefik.http.routers.ms-pagos.middlewares=ms-pagos-strip"
+      
+  # Microservicio Inventario
+  ms-inventario:
+    build:
+      context: .
+      dockerfile: ms_inventario/Dockerfile
+    image: ms-inventario:v1.0.0 #1 worker - testing
+    container_name: ms-inventario
+    environment:
+      - PYTHONPATH=/app
+      - PORT=5004
+    networks:
+      - carlosred
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ms-inventario.rule=PathPrefix(`/ms_inventario`)"
+      - "traefik.http.routers.ms-inventario.entrypoints=web"
+      - "traefik.http.services.ms-inventario.loadbalancer.server.port=5004"
+      - "traefik.http.middlewares.ms-inventario-strip.stripprefix.prefixes=/ms_inventario"
+      - "traefik.http.routers.ms-inventario.middlewares=ms-inventario-strip"
+  
+  # Orquestador SAGA
+  orquestador:
+    build:
+      context: .
+      dockerfile: orquestador/Dockerfile
+    image: orquestador:v1.0.0  # 2 workers - testing
+    container_name: orquestador
+    environment:
+      - PYTHONPATH=/app
+      - PORT=5000
+      - MS_CATALOGO_URL=http://ms-catalogo:5001
+      - MS_COMPRAS_URL=http://ms-compras:5002
+      - MS_PAGOS_URL=http://ms-pagos:5003
+      - MS_INVENTARIO_URL=http://ms-inventario:5004
+    depends_on:
+      - ms-catalogo
+      - ms-compras
+      - ms-pagos
+      - ms-inventario
+    networks:
+      - carlosred #RECUERDEN CAMBIARLA A LA RED QUE ESTEN USANDO
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.orquestador.rule=PathPrefix(`/orquestador`)"
+      - "traefik.http.routers.orquestador.entrypoints=web"
+      - "traefik.http.services.orquestador.loadbalancer.server.port=5000"
+      - "traefik.http.middlewares.orquestador-strip.stripprefix.prefixes=/orquestador"
+      - "traefik.http.routers.orquestador.middlewares=orquestador-strip"
 
 networks:
   carlosred: #RECUERDEN CAMBIARLA A LA RED QUE ESTEN USANDO
