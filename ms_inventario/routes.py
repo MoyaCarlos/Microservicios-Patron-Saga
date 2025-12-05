@@ -47,7 +47,8 @@ def reservar_stock() -> Tuple[dict, int]:
         409: Producto no encontrado o stock insuficiente
     """
     data = request.get_json()
-    producto = data.get('producto')
+    # Aceptar tanto 'producto' como 'producto_id'
+    producto = data.get('producto') or data.get('producto_id')
     cantidad = data.get('cantidad', 1)
     
     response, status_code = inventario_service.reservar_stock(producto, cantidad)

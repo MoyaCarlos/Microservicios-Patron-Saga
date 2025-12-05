@@ -1,3 +1,6 @@
+"""
+Lógica de negocio para el servicio de pagos
+"""
 import logging
 from datetime import datetime
 from typing import Dict, Optional, Tuple
@@ -6,10 +9,9 @@ import os
 import threading
 
 # Agregar el directorio padre al path para importar common
-#sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-#from common.transaction_helper import simular_latencia, tiene_exito, generar_id
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from common.transaction_helper import simular_latencia, tiene_exito, generar_id
 
-from ..utils.transaction_helper import simular_latencia, tiene_exito, generar_id
 from ..config import (
     ESTADO_APROBADO, 
     ESTADO_REEMBOLSADO,
@@ -48,7 +50,7 @@ class PagoService:
         simular_latencia()
         
         # Simular éxito o fallo aleatorio
-        if not tiene_exito(0.5):
+        if not tiene_exito(PROBABILIDAD_EXITO):
             logger.warning(f'❌ Fallo al procesar pago para usuario {usuario_id}')
             return {
                 "success": False,

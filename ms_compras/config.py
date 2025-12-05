@@ -21,4 +21,5 @@ ESTADO_CONFIRMADA = "confirmada"
 ESTADO_CANCELADA = "cancelada"
 
 # Probabilidad de éxito (0.0 a 1.0)
+# 0.5 = 50% de éxito, 50% de fallo
 PROBABILIDAD_EXITO = 0.5

@@ -1,4 +1,6 @@
-#Configuracion para microservicio de pagos
+"""
+Configuración del microservicio de pagos
+"""
 
 # Puerto del servicio
 PORT = 5003
@@ -21,4 +23,5 @@ ESTADO_APROBADO = "aprobado"
 ESTADO_REEMBOLSADO = "reembolsado"
 
 # Probabilidad de éxito (0.0 a 1.0)
+# 0.5 = 50% de éxito, 50% de fallo
 PROBABILIDAD_EXITO = 0.5

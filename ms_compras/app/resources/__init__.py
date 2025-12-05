@@ -1,1 +1,0 @@
-from .compras import compras_bp

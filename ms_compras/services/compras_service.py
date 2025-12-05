@@ -6,11 +6,8 @@ import threading
 
 # Agregar el directorio padre al path para importar common
 # Necesitamos ir 3 niveles arriba: services/ -> ms_compras/ -> microservices/
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-#from common.transaction_helper import simular_latencia, tiene_exito, generar_id
-
-from ..utils.transaction_helper import simular_latencia, tiene_exito, generar_id
-
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from common.transaction_helper import simular_latencia, tiene_exito, generar_id
 #configuraciones del microservicio
 from ..config import (
     ESTADO_CONFIRMADA,
@@ -21,7 +18,6 @@ from ..config import (
     MSG_NO_COMPRA_COMPENSAR,
     PROBABILIDAD_EXITO
 )
-
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +43,7 @@ class ComprasService:
 
         simular_latencia()
 
-        if not tiene_exito(0.5):
+        if not tiene_exito(PROBABILIDAD_EXITO):
             logger.warning(f'Fallo al registrar compra para usuario_id: {usuario_id}')
             return {
                 "success": False,
