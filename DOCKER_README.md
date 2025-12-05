@@ -74,13 +74,14 @@ Internet → Traefik (80) → Microservicios (red interna)
         Dashboard (8080)
 ```
 
-### Red Docker: `carlosred`
+### Red Docker: `mired`
 Todos los servicios están en la misma red bridge para comunicación interna.
 
 ## ⚙️ Configuración de Workers
 
 - **Orquestador**: 4 workers (alta carga)
 - **Microservicios**: 2 workers cada uno
+- # para consistencia actualmente se usa 1 solo worker
 
 ## 🔧 Variables de Entorno
 
@@ -114,5 +115,5 @@ docker compose up -d --build orquestador
 
 ### Verificar red:
 ```bash
-docker network inspect respaldoversionfinal_carlosred
+docker network inspect mired
 ```
