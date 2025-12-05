@@ -60,11 +60,28 @@ Traefik enruta el tráfico externo usando path prefixes.
 
 ## 🧪 Probar la SAGA
 
+### Validación de Catálogo
+
+El sistema **valida que el producto existe** en el catálogo **antes** de ejecutar la saga.
+
+### Patrón Retry
+
+Implementa **3 reintentos** con backoff exponencial (1s, 2s, 4s) para fallos transitorios.
+
+### Ejemplo de Compra
+
 ```bash
 curl -X POST http://localhost/orquestador/compra \
   -H "Content-Type: application/json" \
-  -d '{"usuario_id": "user123"}'
+  -d '{"usuario_id": "user123", "producto": "Laptop", "monto": 1500.00}'
 ```
+
+**Parámetros requeridos:**
+- `usuario_id`: Identificador del usuario
+- `producto`: Nombre del producto (debe existir en catálogo)
+- `monto`: Monto a pagar
+
+**Probabilidad de éxito:** 50% por intento (87.5% con 3 reintentos)
 
 ## 🏗️ Arquitectura
 
@@ -83,13 +100,19 @@ Todos los servicios están en la misma red bridge para comunicación interna.
 - **Microservicios**: 2 workers cada uno
 - # para consistencia actualmente se usa 1 solo worker
 
-## 🔧 Variables de Entorno
+## ⚙️ Variables de Entorno
 
 El orquestador usa estas variables (definidas en docker-compose.yml):
 - `MS_CATALOGO_URL=http://ms-catalogo:5001`
 - `MS_COMPRAS_URL=http://ms-compras:5002`
 - `MS_PAGOS_URL=http://ms-pagos:5003`
 - `MS_INVENTARIO_URL=http://ms-inventario:5004`
+
+## 🔄 Configuración de Resilencia
+
+- **Patrón Retry**: Máximo 3 intentos con backoff exponencial
+- **Probabilidad de éxito**: 50% por intento (configurable en `config.py`)
+- **Validación temprana**: Verifica catálogo antes de iniciar transacciones
 
 ## 📦 Imágenes Base
 
